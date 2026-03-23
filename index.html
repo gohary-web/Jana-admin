@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جني ستور | فخامة التسوق</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --dark-blue: #003d80;
+            --gold: #d4af37;
+            --danger: #e53e3e;
+            --success: #38a169;
+            --bg-light: #f8faff;
+            --white: #ffffff;
+            --text-main: #1a202c;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px rgba(0,86,179,0.1);
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            z-index: 1000;
+        }
+
+        .navbar {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo i { color: var(--gold); font-size: 1.1rem; }
+
+        .search-box { flex: 0.6; position: relative; display: flex; align-items: center; }
+        .search-box input {
+            width: 100%;
+            padding: 10px 45px 10px 20px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        .search-box i { position: absolute; right: 15px; color: #a0aec0; }
+
+        .nav-actions { display: flex; gap: 15px; }
+
+        .icon-btn {
+            background: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary-blue);
+            box-shadow: var(--shadow-sm);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--gold);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            border-radius: 30px;
+            padding: 60px 40px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 { font-size: 2.5rem; margin-bottom: 15px; font-weight: 800; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #edf2f7;
+            position: relative;
+        }
+
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 30px rgba(0,0,0,0.08); }
+
+        .card-img-wrap { width: 100%; height: 230px; overflow: hidden; position: relative; }
+        .card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+
+        /* شارة الخصم */
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        .card-body { padding: 20px; }
+        .category { font-size: 12px; color: var(--primary-blue); font-weight: bold; background: #e6effa; padding: 3px 8px; border-radius: 5px; }
+        .title { font-size: 1.1rem; font-weight: 700; margin: 10px 0; color: var(--text-main); }
+        
+        .price-tag { display: flex; flex-direction: column; margin-top: 10px; }
+        .old-price { text-decoration: line-through; color: #a0aec0; font-size: 0.9rem; }
+        .current-price { font-size: 1.3rem; font-weight: 800; color: var(--dark-blue); }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            border-top: 1px solid #edf2f7;
+            padding-top: 15px;
+        }
+
+        /* أزرار الأدمن داخل الكارت */
+        .admin-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+        .control-btn {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        .edit-btn { background: var(--white); color: var(--primary-blue); }
+        .del-btn { background: var(--white); color: var(--danger); }
+        .control-btn:hover { transform: scale(1.1); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 25px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal { position: absolute; top: 20px; left: 20px; cursor: pointer; font-size: 1.3rem; color: #a0aec0; }
+
+        .whatsapp-btn {
+            display: flex;
+            width: 100%;
+            padding: 15px;
+            background: #25D366;
+            color: white;
+            border-radius: 15px;
+            font-weight: 800;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d3748;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            display: none;
+            z-index: 3000;
+        }
+
+        .admin-fab {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--dark-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .hero h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar-container">
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <i class="fas fa-gem"></i>
+                <span>جني ستور</span>
+            </a>
+            
+            
+
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="app.openAddModal()">
+                    <i class="fas fa-plus"></i>
+                </button>
+              
+            </div>
+        </nav>
+    </div>
+
+    <main class="container">
+        <section class="hero">
+            <h1>اكتشف الفخامة في كل زاوية</h1>
+            <p>المطور: معاذ الجوهري</p>
+        </section>
+        
+        <div class="grid" id="productsGrid"></div>
+    </main>
+
+    <div class="admin-fab" onclick="app.openAddModal()">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="app.toggleModal('adminModal')">&times;</span>
+            <h2 id="modalTitle" style="margin-bottom: 20px;">إضافة منتج جديد</h2>
+            <form id="productForm" onsubmit="app.handleFormSubmit(event)">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="pName" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>السعر الحالي (ج.م)</label>
+                        <input type="number" id="pPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>السعر قبل الخصم (اختياري)</label>
+                        <input type="number" id="pOldPrice">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>رقم واتساب الشراء (بدون +)</label>
+                    <input type="text" id="pWhatsapp" placeholder="مثال: 201000000000">
+                </div>
+                <div class="form-group">
+                    <label>القسم</label>
+                    <input type="text" id="pCat">
+                </div>
+                <div class="form-group">
+                    <label>وصف المنتج</label>
+                    <textarea id="pDesc" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>رابط الصورة</label>
+                    <input type="url" id="pImg">
+                </div>
+                <button type="submit" class="submit-btn" id="saveBtn">حفظ المنتج</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="viewModal" class="modal">
+        <div class="modal-content" id="viewContent"></div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, set, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            databaseURL: "https://mdhj-d3cdb-default-rtdb.firebaseio.com",
+            projectId: "mdhj-d3cdb",
+        };
+
+        const fApp = initializeApp(firebaseConfig);
+        const db = getDatabase(fApp);
+        const productsRef = ref(db, 'products');
+
+        const app = {
+            allProducts: [],
+            defaultWhatsapp: "201000000000",
+
+            init() {
+                onValue(productsRef, (snapshot) => {
+                    const data = snapshot.val();
+                    this.allProducts = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : [];
+                    this.render(this.allProducts);
+                });
+            },
+
+            render(items) {
+                const grid = document.getElementById('productsGrid');
+                if(items.length === 0) {
+                    grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">لا يوجد منتجات.</p>';
+                    return;
+                }
+                
+                grid.innerHTML = items.map(p => {
+                    const hasDiscount = p.oldPrice && parseFloat(p.oldPrice) > parseFloat(p.price);
+                    return `
+                    <div class="card">
+                        <div class="admin-controls">
+                            <button class="control-btn edit-btn" onclick="app.openEditModal('${p.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="control-btn del-btn" onclick="app.deleteProduct('${p.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div onclick="app.showDetails('${p.id}')">
+                            <div class="card-img-wrap">
+                                ${hasDiscount ? `<span class="discount-badge">خصم</span>` : ''}
+                                <img src="${p.img || 'https://via.placeholder.com/300'}" alt="${p.name}">
+                            </div>
+                            <div class="card-body">
+                                <span class="category">${p.category || 'عام'}</span>
+                                <h3 class="title">${p.name}</h3>
+                                <div class="price-tag">
+                                    ${hasDiscount ? `<span class="old-price">${p.oldPrice} ج.م</span>` : ''}
+                                    <span class="current-price">${p.price} ج.م</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `}).join('');
+            },
+
+            handleFormSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('editId').value;
+                if (id) this.update(id);
+                else this.save();
+            },
+
+            async save() {
+                const btn = document.getElementById('saveBtn');
+                btn.disabled = true;
+                try {
+                    const newProdRef = push(productsRef);
+                    await set(newProdRef, this.getFormData());
+                    this.notify("تمت الإضافة بنجاح");
+                    this.toggleModal('adminModal');
+                    document.getElementById('productForm').reset();
+                } catch (err) { this.notify("خطأ في الحفظ"); }
+                finally { btn.disabled = false; }
+            },
+
+            async update(id) {
+                const btn = document.getElementById('saveBtn');
+                btn.disabled = true;
+                try {
+                    const specificRef = ref(db, `products/${id}`);
+                    await update(specificRef, this.getFormData());
+                    this.notify("تم التعديل بنجاح");
+                    this.toggleModal('adminModal');
+                } catch (err) { this.notify("خطأ في التعديل"); }
+                finally { btn.disabled = false; }
+            },
+
+            async deleteProduct(id) {
+                if(confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟')) {
+                    try {
+                        await remove(ref(db, `products/${id}`));
+                        this.notify("تم الحذف بنجاح");
+                    } catch (err) { this.notify("خطأ في الحذف"); }
+                }
+            },
+
+            getFormData() {
+                return {
+                    name: document.getElementById('pName').value,
+                    price: document.getElementById('pPrice').value,
+                    oldPrice: document.getElementById('pOldPrice').value || null,
+                    whatsapp: document.getElementById('pWhatsapp').value || this.defaultWhatsapp,
+                    category: document.getElementById('pCat').value || "عام",
+                    description: document.getElementById('pDesc').value || "",
+                    img: document.getElementById('pImg').value || "https://via.placeholder.com/300",
+                    updatedAt: Date.now()
+                };
+            },
+
+            openAddModal() {
+                document.getElementById('productForm').reset();
+                document.getElementById('editId').value = "";
+                document.getElementById('modalTitle').innerText = "إضافة منتج جديد";
+                this.toggleModal('adminModal');
+            },
+
+            openEditModal(id) {
+                const p = this.allProducts.find(x => x.id === id);
+                document.getElementById('editId').value = p.id;
+                document.getElementById('pName').value = p.name;
+                document.getElementById('pPrice').value = p.price;
+                document.getElementById('pOldPrice').value = p.oldPrice || "";
+                document.getElementById('pWhatsapp').value = p.whatsapp || "";
+                document.getElementById('pCat').value = p.category;
+                document.getElementById('pDesc').value = p.description;
+                document.getElementById('pImg').value = p.img;
+                document.getElementById('modalTitle').innerText = "تعديل المنتج";
+                this.toggleModal('adminModal', true);
+            },
+
+            showDetails(id) {
+                const p = this.allProducts.find(item => item.id === id);
+                const wa = p.whatsapp || this.defaultWhatsapp;
+                document.getElementById('viewContent').innerHTML = `
+                    <span class="close-modal" onclick="app.toggleModal('viewModal')">&times;</span>
+                    <img src="${p.img}" class="product-detail-img">
+                    <h2>${p.name}</h2>
+                    <p style="margin: 15px 0;">${p.description || 'لا يوجد وصف.'}</p>
+                    <div class="price-tag">
+                        ${p.oldPrice ? `<span class="old-price">${p.oldPrice} ج.م</span>` : ''}
+                        <span class="current-price" style="font-size:1.8rem;">${p.price} ج.م</span>
+                    </div>
+                    <a href="https://wa.me/${wa}?text=طلب شراء: ${p.name}" target="_blank" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> تواصل عبر واتساب
+                    </a>
+                `;
+                this.toggleModal('viewModal');
+            },
+
+            search(val) {
+                const filtered = this.allProducts.filter(p => p.name.toLowerCase().includes(val.toLowerCase()));
+                this.render(filtered);
+            },
+
+            toggleModal(id, forceOpen = false) {
+                const m = document.getElementById(id);
+                if (forceOpen) { m.style.display = 'flex'; return; }
+                m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+            },
+
+            notify(msg) {
+                const t = document.getElementById('toast');
+                t.innerText = msg; t.style.display = 'block';
+                setTimeout(() => t.style.display = 'none', 3000);
+            }
+        };
+
+        window.app = app;
+        app.init();
+    </script>
+</body>
+</html>
